@@ -7,8 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.nannydays.R
 
 /**
  * Common top app bar with back navigation.
@@ -33,7 +35,7 @@ fun NannyDaysTopBar(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Navigate back"
+                        contentDescription = stringResource(R.string.navigate_back)
                     )
                 }
             }
@@ -88,8 +90,8 @@ fun EmptyState(
 fun ConfirmationDialog(
     title: String,
     message: String,
-    confirmText: String = "Confirm",
-    dismissText: String = "Cancel",
+    confirmText: String = stringResource(R.string.confirm),
+    dismissText: String = stringResource(R.string.cancel),
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {

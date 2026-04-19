@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.nannydays.R
 import com.nannydays.data.model.Child
 import com.nannydays.ui.components.ConfirmationDialog
 import com.nannydays.ui.components.EmptyState
@@ -36,7 +38,7 @@ fun ChildListScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = "Children",
+                title = stringResource(R.string.nav_children),
                 onNavigateBack = onNavigateBack
             )
         },
@@ -45,13 +47,13 @@ fun ChildListScreen(
                 onClick = onNavigateToAddChild,
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Child")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_child))
             }
         }
     ) { padding ->
         if (children.isEmpty()) {
             EmptyState(
-                message = "No children added yet.\nTap + to add your first child.",
+                message = stringResource(R.string.no_children_message),
                 modifier = Modifier.padding(padding)
             )
         } else {
@@ -74,9 +76,9 @@ fun ChildListScreen(
         // Delete confirmation dialog
         childToDelete?.let { child ->
             ConfirmationDialog(
-                title = "Delete Child",
-                message = "Are you sure you want to delete ${child.name}? This will also delete all their care sessions.",
-                confirmText = "Delete",
+                title = stringResource(R.string.delete_child_title),
+                message = stringResource(R.string.delete_child_confirm_message, child.name),
+                confirmText = stringResource(R.string.delete),
                 onConfirm = {
                     viewModel.deleteChild(child)
                     childToDelete = null
@@ -131,13 +133,13 @@ private fun ChildListItem(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Age: ${DateTimeUtils.calculateAge(child.dateOfBirth)} years",
+                    text = stringResource(R.string.age_years, DateTimeUtils.calculateAge(child.dateOfBirth)),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (child.parentName.isNotEmpty()) {
                     Text(
-                        text = "Parent: ${child.parentName}",
+                        text = stringResource(R.string.parent_label, child.parentName),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -146,14 +148,14 @@ private fun ChildListItem(
             
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
                 }
                 DropdownMenu(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("View Details") },
+                        text = { Text(stringResource(R.string.view_details)) },
                         onClick = {
                             showMenu = false
                             onClick()
@@ -163,7 +165,7 @@ private fun ChildListItem(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete") },
+                        text = { Text(stringResource(R.string.delete)) },
                         onClick = {
                             showMenu = false
                             onDelete()

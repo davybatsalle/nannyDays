@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nannydays.R
 import com.nannydays.ui.components.NannyDaysTopBar
 import com.nannydays.ui.viewmodel.ChildViewModel
 import com.nannydays.util.QrCodeUtils
@@ -52,7 +54,7 @@ fun QrCodeScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = "QR Code",
+                title = stringResource(R.string.qr_code),
                 onNavigateBack = onNavigateBack,
                 actions = {
                     IconButton(
@@ -60,14 +62,14 @@ fun QrCodeScreen(
                             scope.launch {
                                 val saved = saveQrCodeToGallery(context, qrCodeBitmap, child?.name ?: "child")
                                 if (saved) {
-                                    snackbarHostState.showSnackbar("QR code saved to gallery")
+                                    snackbarHostState.showSnackbar(context.getString(R.string.qr_code_saved))
                                 } else {
-                                    snackbarHostState.showSnackbar("Failed to save QR code")
+                                    snackbarHostState.showSnackbar(context.getString(R.string.qr_code_save_failed))
                                 }
                             }
                         }
                     ) {
-                        Icon(Icons.Default.Download, contentDescription = "Save QR Code")
+                        Icon(Icons.Default.Download, contentDescription = stringResource(R.string.save_qr_code))
                     }
                 }
             )
@@ -110,7 +112,7 @@ fun QrCodeScreen(
                 ) {
                     Image(
                         bitmap = qrCodeBitmap.asImageBitmap(),
-                        contentDescription = "QR Code for ${child?.name}",
+                        contentDescription = stringResource(R.string.qr_code_content_description, child?.name ?: ""),
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -120,7 +122,7 @@ fun QrCodeScreen(
             
             // Instructions
             Text(
-                text = "Scan this QR code to quickly check in or out",
+                text = stringResource(R.string.qr_scan_instruction_short),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -137,28 +139,28 @@ fun QrCodeScreen(
                         scope.launch {
                             val saved = saveQrCodeToGallery(context, qrCodeBitmap, child?.name ?: "child")
                             if (saved) {
-                                snackbarHostState.showSnackbar("QR code saved to gallery")
+                                snackbarHostState.showSnackbar(context.getString(R.string.qr_code_saved))
                             } else {
-                                snackbarHostState.showSnackbar("Failed to save QR code")
+                                snackbarHostState.showSnackbar(context.getString(R.string.qr_code_save_failed))
                             }
                         }
                     }
                 ) {
                     Icon(Icons.Default.Download, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Save")
+                    Text(stringResource(R.string.save))
                 }
                 
                 Button(
                     onClick = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Print the saved image from your gallery")
+                            snackbarHostState.showSnackbar(context.getString(R.string.print_tip))
                         }
                     }
                 ) {
                     Icon(Icons.Default.Print, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Print")
+                    Text(stringResource(R.string.print))
                 }
             }
             
@@ -172,7 +174,7 @@ fun QrCodeScreen(
                 )
             ) {
                 Text(
-                    text = "💡 Tip: Print this QR code and attach it to the child's bag or card for quick check-ins!",
+                    text = "💡 ${stringResource(R.string.qr_tip_long)}",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.onSecondaryContainer

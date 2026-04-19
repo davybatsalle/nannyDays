@@ -1,0 +1,147 @@
+<resources>
+    <string name="app_name">NannyDays</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_children">Enfants</string>
+    <string name="nav_sessions">Sessions</string>
+    <string name="nav_reports">Rapports</string>
+
+    <!-- Home Screen -->
+    <string name="active_sessions">Sessions actives</string>
+    <string name="active_sessions_count">Sessions actives (%1$d)</string>
+    <string name="no_active_sessions">Aucune session active</string>
+    <string name="quick_actions">Actions rapides</string>
+
+    <!-- Children -->
+    <string name="add_child">Ajouter un enfant</string>
+    <string name="add_first_child">Ajoutez votre premier enfant</string>
+    <string name="edit_child">Modifier l\'enfant</string>
+    <string name="children_count">Enfants (%1$d)</string>
+    <string name="child_name">Nom de l\'enfant</string>
+    <string name="date_of_birth">Date de naissance</string>
+    <string name="standard_hours">Heures standard/semaine</string>
+    <string name="parent_name">Nom du parent/tuteur</string>
+    <string name="contact_info">Coordonnées</string>
+    <string name="notes">Notes</string>
+    <string name="delete_child_title">Supprimer l\'enfant</string>
+
+    <!-- Sessions -->
+    <string name="check_in">Arrivée</string>
+    <string name="check_out">Départ</string>
+    <string name="check_in_short">In</string>
+    <string name="check_out_short">Out</string>
+    <string name="checked_in">Arrivé</string>
+    <string name="checked_out">Parti</string>
+    <string name="checked_in_success">%1$s est arrivé avec succès</string>
+    <string name="checked_out_success">%1$s est parti avec succès</string>
+    <string name="already_checked_in">%1$s est déjà arrivé</string>
+    <string name="checked_in_at">Arrivé à : %1$s</string>
+    <string name="duration">Durée : %1$s</string>
+    <string name="session_active">Active</string>
+    <string name="no_sessions">Aucune session enregistrée</string>
+
+    <string name="child_sessions_title">Sessions de %1$s</string>
+    <string name="all_sessions_title">Toutes les sessions</string>
+    <string name="no_sessions_recorded">Aucune session enregistrée pour le moment.</string>
+    <string name="delete_session_title">Supprimer la session</string>
+    <string name="delete_session_message">Êtes-vous sûr de vouloir supprimer cette session ?</string>
+    <string name="expand_description">Développer</string>
+    <string name="ongoing">en cours</string>
+    <string name="not_checked_out">Départ non enregistré</string>
+    <string name="notes_label">Notes : %1$s</string>
+
+    <!-- QR Code -->
+    <string name="qr_code">Code QR</string>
+    <string name="scan_short">Scanner</string>
+    <string name="scan_qr_code">Scanner le code QR</string>
+    <string name="save_qr_code">Enregistrer le code QR</string>
+    <string name="qr_scan_instruction">Positionnez le code QR dans le cadre</string>
+    <string name="qr_tip">Imprimez ce code QR et attachez-le au sac de l\'enfant pour des arrivées rapides !</string>
+
+    <string name="qr_code_saved">Code QR enregistré dans la galerie</string>
+    <string name="qr_code_save_failed">Échec de l\'enregistrement du code QR</string>
+    <string name="qr_code_content_description">Code QR pour %1$s</string>
+    <string name="qr_scan_instruction_short">Scannez ce code QR pour une arrivée ou un départ rapide</string>
+    <string name="print">Imprimer</string>
+    <string name="print_tip">Imprimez l\'image enregistrée depuis votre galerie</string>
+    <string name="qr_tip_long">Astuce : Imprimez ce code QR et attachez-le au sac ou à la carte de l\'enfant pour des pointages rapides !</string>
+
+    <!-- Reports -->
+    <string name="generate_report">Générer le rapport</string>
+    <string name="export_csv">Exporter en CSV</string>
+    <string name="export_pdf">Exporter en PDF</string>
+    <string name="select_child">Sélectionner un enfant</string>
+    <string name="date_range">Plage de dates</string>
+    <string name="this_week">Cette semaine</string>
+    <string name="this_month">Ce mois-ci</string>
+    <string name="last_month">Le mois dernier</string>
+    <string name="total_hours">Total des heures</string>
+    <string name="total_sessions">Total des sessions</string>
+
+    <string name="already_checked_in_scan">%1$s est déjà arrivé. Scannez à nouveau pour enregistrer le départ.</string>
+    <string name="child_not_found">Enfant non trouvé. Veuillez vérifier le code QR.</string>
+    <string name="invalid_qr_code">Code QR invalide. Veuillez utiliser un code QR NannyDays.</string>
+    <string name="processing">Traitement…</string>
+    <string name="camera_auto_scan">L\'appareil photo scannera automatiquement le code</string>
+
+    <!-- Permissions -->
+    <string name="camera_permission_required">Autorisation de l\'appareil photo requise</string>
+    <string name="camera_permission_rationale">Pour scanner les codes QR, veuillez accorder l\'autorisation d\'utiliser l\'appareil photo.</string>
+    <string name="grant_permission">Accorder l\'autorisation</string>
+
+    <!-- Common -->
+    <string name="edit">Modifier</string>
+    <string name="save">Enregistrer</string>
+    <string name="cancel">Annuler</string>
+    <string name="delete">Supprimer</string>
+    <string name="confirm">Confirmer</string>
+    <string name="error">Erreur</string>
+    <string name="error_message">Erreur : %1$s</string>
+    <string name="loading">Chargement…</string>
+    <string name="success">Succès</string>
+    <string name="unknown">Inconnu</string>
+    <string name="view_details">Voir les détails</string>
+    <string name="child_details">Détails de l\'enfant</string>
+    <string name="age_years">Âge : %1$d ans</string>
+    <string name="parent_label">Parent : %1$s</string>
+    <string name="more_options">Plus d\'options</string>
+    <string name="navigate_back">Retour</string>
+    <string name="toggle_flash">Activer le flash</string>
+    <string name="no_children_message">Aucun enfant ajouté pour le moment.\nAppuyez sur + pour ajouter votre premier enfant.</string>
+    <string name="delete_child_confirm_message">Êtes-vous sûr de vouloir supprimer %1$s ? Cela supprimera également toutes ses sessions.</string>
+    <string name="child_name_label">Nom de l\'enfant *</string>
+    <string name="child_name_placeholder">Entrez le nom de l\'enfant</string>
+    <string name="dob_label">Date de naissance *</string>
+    <string name="select_date">Sélectionner une date</string>
+    <string name="age_display">Âge : %1$d ans</string>
+    <string name="standard_hours_label">Heures standard/semaine *</string>
+    <string name="standard_hours_placeholder">ex: 20</string>
+    <string name="invalid_number">Veuillez entrer un nombre valide</string>
+    <string name="parent_info_title">Informations sur le parent/tuteur</string>
+    <string name="parent_name_placeholder">Entrez le nom du parent</string>
+    <string name="contact_info_placeholder">Téléphone ou email</string>
+    <string name="notes_placeholder">Toutes notes additionnelles…</string>
+    <string name="child_info_title">Informations de l\'enfant</string>
+    <string name="age_label">Âge</string>
+    <string name="parent_guardian_label">Parent/Tuteur</string>
+    <string name="name_label">Nom</string>
+    <string name="contact_label">Contact</string>
+    <string name="statistics_label">Statistiques</string>
+    <string name="recent_sessions_label">Sessions récentes</string>
+    <string name="view_all_sessions_count">Voir toutes les sessions (%1$d)</string>
+    <string name="hours_suffix">%1$gh</string>
+    <string name="export_saved">%1$s enregistré dans : %2$s</string>
+    <string name="add_children_reports">Ajoutez des enfants pour générer des rapports</string>
+    <string name="select_child_placeholder">Sélectionner un enfant</string>
+    <string name="from_label">Du</string>
+    <string name="to_label">Au</string>
+    <string name="sessions_count">Sessions (%1$d)</string>
+    <string name="active_label">Active</string>
+    <string name="currently_checked_in">Actuellement arrivé</string>
+    <string name="status_in_progress">En cours</string>
+    <string name="no_sessions_period">Aucune session sur cette période</string>
+    <string name="avg_session">Moy/Session</string>
+    <string name="hours_stat">%1$.1f</string>
+    <string name="hours_stat_label">%1$.1fh</string>
+</resources>

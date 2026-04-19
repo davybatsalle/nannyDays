@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -30,6 +31,7 @@ import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.nannydays.R
 import com.nannydays.ui.components.NannyDaysTopBar
 import com.nannydays.ui.viewmodel.CheckInResult
 import com.nannydays.ui.viewmodel.SessionViewModel
@@ -79,9 +81,9 @@ fun QrScannerScreen(
         when (val result = checkInResult) {
             is CheckInResult.Success -> {
                 val message = if (result.isCheckIn) {
-                    "✓ ${result.childName} checked in!"
+                    "✓ ${context.getString(R.string.checked_in_success, result.childName)}"
                 } else {
-                    "✓ ${result.childName} checked out!"
+                    "✓ ${context.getString(R.string.checked_out_success, result.childName)}"
                 }
                 snackbarHostState.showSnackbar(message)
                 // Reset for next scan
@@ -90,22 +92,22 @@ fun QrScannerScreen(
                 lastScannedCode = null
             }
             is CheckInResult.AlreadyCheckedIn -> {
-                snackbarHostState.showSnackbar("${result.childName} is already checked in. Scanning again will check out.")
+                snackbarHostState.showSnackbar(context.getString(R.string.already_checked_in_scan, result.childName))
                 isProcessing = false
                 lastScannedCode = null
             }
             is CheckInResult.ChildNotFound -> {
-                snackbarHostState.showSnackbar("Child not found. Please check the QR code.")
+                snackbarHostState.showSnackbar(context.getString(R.string.child_not_found))
                 isProcessing = false
                 lastScannedCode = null
             }
             is CheckInResult.InvalidQrCode -> {
-                snackbarHostState.showSnackbar("Invalid QR code. Please use a NannyDays QR code.")
+                snackbarHostState.showSnackbar(context.getString(R.string.invalid_qr_code))
                 isProcessing = false
                 lastScannedCode = null
             }
             is CheckInResult.Error -> {
-                snackbarHostState.showSnackbar("Error: ${result.message}")
+                snackbarHostState.showSnackbar(context.getString(R.string.error_message, result.message))
                 isProcessing = false
                 lastScannedCode = null
             }
@@ -116,14 +118,14 @@ fun QrScannerScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = "Scan QR Code",
+                title = stringResource(R.string.scan_qr_code),
                 onNavigateBack = onNavigateBack,
                 actions = {
                     if (hasCameraPermission) {
                         IconButton(onClick = { flashEnabled = !flashEnabled }) {
                             Icon(
                                 if (flashEnabled) Icons.Default.FlashOn else Icons.Default.FlashOff,
-                                contentDescription = "Toggle flash"
+                                contentDescription = stringResource(R.string.toggle_flash)
                             )
                         }
                     }
@@ -270,20 +272,20 @@ fun QrScannerScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Processing...",
+                            text = stringResource(R.string.processing),
                             color = Color.White,
                             style = MaterialTheme.typography.bodyLarge
                         )
                     } else {
                         Text(
-                            text = "Position the QR code within the frame",
+                            text = stringResource(R.string.qr_scan_instruction),
                             color = Color.White,
                             style = MaterialTheme.typography.bodyLarge,
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "The camera will automatically scan the code",
+                            text = stringResource(R.string.camera_auto_scan),
                             color = Color.White.copy(alpha = 0.7f),
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.Center
@@ -307,13 +309,13 @@ fun QrScannerScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Camera Permission Required",
+                        text = stringResource(R.string.camera_permission_required),
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "To scan QR codes, please grant camera permission.",
+                        text = stringResource(R.string.camera_permission_rationale),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -322,7 +324,7 @@ fun QrScannerScreen(
                     Button(
                         onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }
                     ) {
-                        Text("Grant Permission")
+                        Text(stringResource(R.string.grant_permission))
                     }
                 }
             }

@@ -10,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.nannydays.R
 import com.nannydays.data.model.CareSession
 import com.nannydays.data.model.Child
 import com.nannydays.ui.components.ConfirmationDialog
@@ -52,14 +54,14 @@ fun SessionListScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = if (child != null) "${child.name}'s Sessions" else "All Sessions",
+                title = if (child != null) stringResource(R.string.child_sessions_title, child.name) else stringResource(R.string.all_sessions_title),
                 onNavigateBack = onNavigateBack
             )
         }
     ) { padding ->
         if (childSessions.isEmpty()) {
             EmptyState(
-                message = "No care sessions recorded yet.",
+                message = stringResource(R.string.no_sessions_recorded),
                 modifier = Modifier.padding(padding)
             )
         } else {
@@ -110,9 +112,9 @@ fun SessionListScreen(
         // Delete confirmation
         sessionToDelete?.let { session ->
             ConfirmationDialog(
-                title = "Delete Session",
-                message = "Are you sure you want to delete this care session?",
-                confirmText = "Delete",
+                title = stringResource(R.string.delete_session_title),
+                message = stringResource(R.string.delete_session_message),
+                confirmText = stringResource(R.string.delete),
                 onConfirm = {
                     sessionViewModel.deleteSession(session)
                     sessionToDelete = null
@@ -191,7 +193,7 @@ private fun SessionListItem(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = session.checkOutTime?.let { DateTimeUtils.formatTime(it) } ?: "Active",
+                            text = session.checkOutTime?.let { DateTimeUtils.formatTime(it) } ?: stringResource(R.string.session_active),
                             style = MaterialTheme.typography.bodyMedium,
                             color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                         )
@@ -212,7 +214,7 @@ private fun SessionListItem(
                     )
                     if (isActive) {
                         Text(
-                            text = "ongoing",
+                            text = stringResource(R.string.ongoing),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -222,7 +224,7 @@ private fun SessionListItem(
                 // Expand icon
                 Icon(
                     if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = "Expand",
+                    contentDescription = stringResource(R.string.expand_description),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -230,7 +232,7 @@ private fun SessionListItem(
             // Expanded content
             if (isExpanded) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Divider()
+                HorizontalDivider()
                 Spacer(modifier = Modifier.height(12.dp))
                 
                 // Session details
@@ -240,7 +242,7 @@ private fun SessionListItem(
                 ) {
                     Column {
                         Text(
-                            text = "Check In",
+                            text = stringResource(R.string.check_in),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -251,14 +253,14 @@ private fun SessionListItem(
                     }
                     Column(horizontalAlignment = Alignment.End) {
                         Text(
-                            text = "Check Out",
+                            text = stringResource(R.string.check_out),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = session.checkOutTime?.let { 
                                 DateTimeUtils.formatDateTime(it) 
-                            } ?: "Not checked out",
+                            } ?: stringResource(R.string.not_checked_out),
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
@@ -268,7 +270,7 @@ private fun SessionListItem(
                 if (session.notes.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Notes: ${session.notes}",
+                        text = stringResource(R.string.notes_label, session.notes),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -289,7 +291,7 @@ private fun SessionListItem(
                         ) {
                             Icon(Icons.Default.Logout, contentDescription = null)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Check Out")
+                            Text(stringResource(R.string.check_out))
                         }
                     }
                     
@@ -303,7 +305,7 @@ private fun SessionListItem(
                     ) {
                         Icon(Icons.Default.Delete, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Delete")
+                        Text(stringResource(R.string.delete))
                     }
                 }
             }

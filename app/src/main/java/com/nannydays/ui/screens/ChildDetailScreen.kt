@@ -9,8 +9,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.nannydays.R
 import com.nannydays.data.model.CareSession
 import com.nannydays.data.model.Child
 import com.nannydays.ui.components.ConfirmationDialog
@@ -44,16 +46,16 @@ fun ChildDetailScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = child?.name ?: "Child Details",
+                title = child?.name ?: stringResource(R.string.child_details),
                 onNavigateBack = onNavigateBack,
                 actions = {
                     IconButton(onClick = onNavigateToEdit) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit")
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit))
                     }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             Icons.Default.Delete,
-                            contentDescription = "Delete",
+                            contentDescription = stringResource(R.string.delete),
                             tint = MaterialTheme.colorScheme.error
                         )
                     }
@@ -107,7 +109,7 @@ fun ChildDetailScreen(
                         )
                         
                         Text(
-                            text = "${DateTimeUtils.calculateAge(currentChild.dateOfBirth)} years old",
+                            text = stringResource(R.string.age_display, DateTimeUtils.calculateAge(currentChild.dateOfBirth)),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
@@ -131,7 +133,7 @@ fun ChildDetailScreen(
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
-                                        text = "Currently Checked In",
+                                        text = stringResource(R.string.currently_checked_in),
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.onTertiary
                                     )
@@ -150,28 +152,28 @@ fun ChildDetailScreen(
                 ) {
                     ActionButton(
                         icon = Icons.Default.QrCode,
-                        label = "QR Code",
+                        label = stringResource(R.string.qr_code),
                         onClick = onNavigateToQrCode
                     )
                     
                     if (activeSession != null) {
                         ActionButton(
                             icon = Icons.Default.Logout,
-                            label = "Check Out",
+                            label = stringResource(R.string.check_out),
                             onClick = { sessionViewModel.checkOut(childId) },
                             containerColor = MaterialTheme.colorScheme.errorContainer
                         )
                     } else {
                         ActionButton(
                             icon = Icons.Default.Login,
-                            label = "Check In",
+                            label = stringResource(R.string.check_in),
                             onClick = { sessionViewModel.checkIn(childId) }
                         )
                     }
                     
                     ActionButton(
                         icon = Icons.Default.History,
-                        label = "Sessions",
+                        label = stringResource(R.string.nav_sessions),
                         onClick = onNavigateToSessions
                     )
                 }
@@ -179,23 +181,23 @@ fun ChildDetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 // Child Information
-                SectionHeader(title = "Child Information")
+                SectionHeader(title = stringResource(R.string.child_info_title))
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
                     Column {
-                        InfoRow("Date of Birth", DateTimeUtils.formatDate(currentChild.dateOfBirth))
-                        InfoRow("Age", "${DateTimeUtils.calculateAge(currentChild.dateOfBirth)} years")
-                        InfoRow("Standard Hours/Week", "${currentChild.standardHoursPerWeek}h")
+                        InfoRow(stringResource(R.string.date_of_birth), DateTimeUtils.formatDate(currentChild.dateOfBirth))
+                        InfoRow(stringResource(R.string.age_label), stringResource(R.string.age_display, DateTimeUtils.calculateAge(currentChild.dateOfBirth)))
+                        InfoRow(stringResource(R.string.standard_hours), stringResource(R.string.hours_suffix, currentChild.standardHoursPerWeek))
                     }
                 }
                 
                 // Parent Information
                 if (currentChild.parentName.isNotEmpty() || currentChild.parentContact.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    SectionHeader(title = "Parent/Guardian")
+                    SectionHeader(title = stringResource(R.string.parent_guardian_label))
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -203,10 +205,10 @@ fun ChildDetailScreen(
                     ) {
                         Column {
                             if (currentChild.parentName.isNotEmpty()) {
-                                InfoRow("Name", currentChild.parentName)
+                                InfoRow(stringResource(R.string.name_label), currentChild.parentName)
                             }
                             if (currentChild.parentContact.isNotEmpty()) {
-                                InfoRow("Contact", currentChild.parentContact)
+                                InfoRow(stringResource(R.string.contact_label), currentChild.parentContact)
                             }
                         }
                     }
@@ -215,7 +217,7 @@ fun ChildDetailScreen(
                 // Notes
                 if (currentChild.notes.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    SectionHeader(title = "Notes")
+                    SectionHeader(title = stringResource(R.string.notes))
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -231,7 +233,7 @@ fun ChildDetailScreen(
                 
                 // Summary Statistics
                 Spacer(modifier = Modifier.height(8.dp))
-                SectionHeader(title = "Statistics")
+                SectionHeader(title = stringResource(R.string.statistics_label))
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -241,15 +243,15 @@ fun ChildDetailScreen(
                     val totalHours = completedSessions.sumOf { it.getDurationHours().toDouble() }.toFloat()
                     
                     Column {
-                        InfoRow("Total Sessions", sessions.size.toString())
-                        InfoRow("Total Hours", DateTimeUtils.formatDuration(totalHours))
+                        InfoRow(stringResource(R.string.total_sessions), sessions.size.toString())
+                        InfoRow(stringResource(R.string.total_hours), DateTimeUtils.formatDuration(totalHours))
                     }
                 }
                 
                 // Recent Sessions
                 if (sessions.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    SectionHeader(title = "Recent Sessions")
+                    SectionHeader(title = stringResource(R.string.recent_sessions_label))
                     
                     sessions.take(3).forEach { session ->
                         RecentSessionItem(session)
@@ -262,7 +264,7 @@ fun ChildDetailScreen(
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp)
                         ) {
-                            Text("View All Sessions (${sessions.size})")
+                            Text(stringResource(R.string.view_all_sessions_count, sessions.size))
                         }
                     }
                 }
@@ -283,9 +285,9 @@ fun ChildDetailScreen(
         // Delete confirmation
         if (showDeleteDialog && child != null) {
             ConfirmationDialog(
-                title = "Delete Child",
-                message = "Are you sure you want to delete ${child!!.name}? This will also delete all their care sessions.",
-                confirmText = "Delete",
+                title = stringResource(R.string.delete_child_title),
+                message = stringResource(R.string.delete_child_confirm_message, child!!.name),
+                confirmText = stringResource(R.string.delete),
                 onConfirm = {
                     childViewModel.deleteChild(child!!)
                     showDeleteDialog = false
@@ -343,7 +345,7 @@ private fun RecentSessionItem(session: CareSession) {
                 )
                 Text(
                     text = "${DateTimeUtils.formatTime(session.checkInTime)} - ${
-                        session.checkOutTime?.let { DateTimeUtils.formatTime(it) } ?: "Active"
+                        session.checkOutTime?.let { DateTimeUtils.formatTime(it) } ?: stringResource(R.string.session_active)
                     }",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -353,7 +355,7 @@ private fun RecentSessionItem(session: CareSession) {
                 text = if (session.checkOutTime != null) {
                     DateTimeUtils.formatDuration(session.getDurationHours())
                 } else {
-                    "In Progress"
+                    stringResource(R.string.status_in_progress)
                 },
                 style = MaterialTheme.typography.labelMedium,
                 color = if (session.checkOutTime != null) {

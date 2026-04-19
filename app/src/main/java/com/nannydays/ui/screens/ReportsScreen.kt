@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.nannydays.R
 import com.nannydays.data.model.Child
 import com.nannydays.data.model.ChildReport
 import com.nannydays.ui.components.EmptyState
@@ -85,13 +87,13 @@ fun ReportsScreen(
         when (val result = exportResult) {
             is ExportResult.Success -> {
                 snackbarHostState.showSnackbar(
-                    message = "${result.format} saved to: ${result.filePath}",
+                    message = context.getString(R.string.export_saved, result.format, result.filePath),
                     actionLabel = "OK",
                     duration = SnackbarDuration.Long
                 )
             }
             is ExportResult.Error -> {
-                snackbarHostState.showSnackbar("Error: ${result.message}")
+                snackbarHostState.showSnackbar(context.getString(R.string.error_message, result.message))
             }
             null -> {}
         }
@@ -100,7 +102,7 @@ fun ReportsScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = "Reports",
+                title = stringResource(R.string.nav_reports),
                 onNavigateBack = onNavigateBack
             )
         },
@@ -108,7 +110,7 @@ fun ReportsScreen(
     ) { padding ->
         if (children.isEmpty()) {
             EmptyState(
-                message = "Add children to generate reports",
+                message = stringResource(R.string.add_children_reports),
                 modifier = Modifier.padding(padding)
             )
         } else {
@@ -122,7 +124,7 @@ fun ReportsScreen(
                 // Child selector
                 item {
                     Text(
-                        text = "Select Child",
+                        text = stringResource(R.string.select_child),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -141,7 +143,7 @@ fun ReportsScreen(
                             Icon(Icons.Default.Person, contentDescription = null)
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = selectedChild?.name ?: "Select a child",
+                                text = selectedChild?.name ?: stringResource(R.string.select_child_placeholder),
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.weight(1f)
                             )
@@ -153,7 +155,7 @@ fun ReportsScreen(
                 // Date range selector
                 item {
                     Text(
-                        text = "Date Range",
+                        text = stringResource(R.string.date_range),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -172,7 +174,7 @@ fun ReportsScreen(
                                 modifier = Modifier.padding(12.dp)
                             ) {
                                 Text(
-                                    text = "From",
+                                    text = stringResource(R.string.from_label),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -201,7 +203,7 @@ fun ReportsScreen(
                                 modifier = Modifier.padding(12.dp)
                             ) {
                                 Text(
-                                    text = "To",
+                                    text = stringResource(R.string.to_label),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -237,7 +239,7 @@ fun ReportsScreen(
                                     DateTimeUtils.getEndOfWeek(now)
                                 )
                             },
-                            label = { Text("This Week") }
+                            label = { Text(stringResource(R.string.this_week)) }
                         )
                         FilterChip(
                             selected = false,
@@ -248,7 +250,7 @@ fun ReportsScreen(
                                     DateTimeUtils.getEndOfMonth(now)
                                 )
                             },
-                            label = { Text("This Month") }
+                            label = { Text(stringResource(R.string.this_month)) }
                         )
                         FilterChip(
                             selected = false,
@@ -261,7 +263,7 @@ fun ReportsScreen(
                                     DateTimeUtils.getEndOfMonth(calendar.timeInMillis)
                                 )
                             },
-                            label = { Text("Last Month") }
+                            label = { Text(stringResource(R.string.last_month)) }
                         )
                     }
                 }
@@ -282,7 +284,7 @@ fun ReportsScreen(
                         }
                         Icon(Icons.Default.Assessment, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Generate Report")
+                        Text(stringResource(R.string.generate_report))
                     }
                 }
                 
@@ -299,7 +301,7 @@ fun ReportsScreen(
                     // Session list
                     if (currentReport.sessions.isNotEmpty()) {
                         item {
-                            SectionHeader(title = "Sessions (${currentReport.sessions.size})")
+                            SectionHeader(title = stringResource(R.string.sessions_count, currentReport.sessions.size))
                         }
                         
                         items(currentReport.sessions) { session ->
@@ -322,7 +324,7 @@ fun ReportsScreen(
                                         )
                                         Text(
                                             text = "${DateTimeUtils.formatTime(session.checkInTime)} - ${
-                                                session.checkOutTime?.let { DateTimeUtils.formatTime(it) } ?: "Active"
+                                                session.checkOutTime?.let { DateTimeUtils.formatTime(it) } ?: stringResource(R.string.active_label)
                                             }",
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -332,7 +334,7 @@ fun ReportsScreen(
                                         text = if (session.checkOutTime != null) {
                                             DateTimeUtils.formatDuration(session.getDurationHours())
                                         } else {
-                                            "In Progress"
+                                            stringResource(R.string.status_in_progress)
                                         },
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.primary
@@ -346,7 +348,7 @@ fun ReportsScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "No sessions in this period",
+                                    text = stringResource(R.string.no_sessions_period),
                                     modifier = Modifier.padding(16.dp),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -370,7 +372,7 @@ fun ReportsScreen(
                             ) {
                                 Icon(Icons.Default.TableChart, contentDescription = null)
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Export CSV")
+                                Text(stringResource(R.string.export_csv))
                             }
                             Button(
                                 onClick = { viewModel.exportToPdf(context) },
@@ -379,7 +381,7 @@ fun ReportsScreen(
                             ) {
                                 Icon(Icons.Default.PictureAsPdf, contentDescription = null)
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Export PDF")
+                                Text(stringResource(R.string.export_pdf))
                             }
                         }
                     }
@@ -391,7 +393,7 @@ fun ReportsScreen(
         if (showChildPicker) {
             AlertDialog(
                 onDismissRequest = { showChildPicker = false },
-                title = { Text("Select Child") },
+                title = { Text(stringResource(R.string.select_child)) },
                 text = {
                     LazyColumn {
                         items(children) { child ->
@@ -416,7 +418,7 @@ fun ReportsScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = { showChildPicker = false }) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )
@@ -457,17 +459,17 @@ private fun ReportSummaryCard(report: ChildReport) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 StatItem(
-                    label = "Total Hours",
-                    value = String.format("%.1f", report.totalHours)
+                    label = stringResource(R.string.total_hours),
+                    value = stringResource(R.string.hours_stat, report.totalHours)
                 )
                 StatItem(
-                    label = "Sessions",
+                    label = stringResource(R.string.nav_sessions),
                     value = report.sessions.size.toString()
                 )
                 StatItem(
-                    label = "Avg/Session",
+                    label = stringResource(R.string.avg_session),
                     value = if (report.sessions.isNotEmpty()) {
-                        String.format("%.1fh", report.totalHours / report.sessions.size)
+                        stringResource(R.string.hours_stat_label, report.totalHours / report.sessions.size)
                     } else {
                         "0h"
                     }

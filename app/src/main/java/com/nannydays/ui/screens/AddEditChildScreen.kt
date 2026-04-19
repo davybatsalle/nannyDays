@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.nannydays.R
 import com.nannydays.data.model.Child
 import com.nannydays.ui.components.NannyDaysTopBar
 import com.nannydays.ui.viewmodel.ChildViewModel
@@ -84,7 +86,7 @@ fun AddEditChildScreen(
     Scaffold(
         topBar = {
             NannyDaysTopBar(
-                title = if (isEditing) "Edit Child" else "Add Child",
+                title = if (isEditing) stringResource(R.string.edit_child) else stringResource(R.string.add_child),
                 onNavigateBack = onNavigateBack,
                 actions = {
                     IconButton(
@@ -120,7 +122,7 @@ fun AddEditChildScreen(
                         },
                         enabled = isFormValid
                     ) {
-                        Icon(Icons.Default.Check, contentDescription = "Save")
+                        Icon(Icons.Default.Check, contentDescription = stringResource(R.string.save))
                     }
                 }
             )
@@ -148,8 +150,8 @@ fun AddEditChildScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Child's Name *") },
-                    placeholder = { Text("Enter child's name") },
+                    label = { Text(stringResource(R.string.child_name_label)) },
+                    placeholder = { Text(stringResource(R.string.child_name_placeholder)) },
                     singleLine = true,
                     isError = name.isNotEmpty() && !isNameValid,
                     modifier = Modifier.fillMaxWidth()
@@ -159,11 +161,11 @@ fun AddEditChildScreen(
                 OutlinedTextField(
                     value = DateTimeUtils.formatDate(dateOfBirth),
                     onValueChange = { },
-                    label = { Text("Date of Birth *") },
+                    label = { Text(stringResource(R.string.dob_label)) },
                     readOnly = true,
                     trailingIcon = {
                         IconButton(onClick = { datePickerDialog.show() }) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = "Select date")
+                            Icon(Icons.Default.CalendarToday, contentDescription = stringResource(R.string.select_date))
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -171,7 +173,7 @@ fun AddEditChildScreen(
                 
                 // Age display
                 Text(
-                    text = "Age: ${DateTimeUtils.calculateAge(dateOfBirth)} years old",
+                    text = stringResource(R.string.age_display, DateTimeUtils.calculateAge(dateOfBirth)),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -180,13 +182,13 @@ fun AddEditChildScreen(
                 OutlinedTextField(
                     value = standardHoursPerWeek,
                     onValueChange = { standardHoursPerWeek = it },
-                    label = { Text("Standard Hours/Week *") },
-                    placeholder = { Text("e.g., 20") },
+                    label = { Text(stringResource(R.string.standard_hours_label)) },
+                    placeholder = { Text(stringResource(R.string.standard_hours_placeholder)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     isError = standardHoursPerWeek.isNotEmpty() && !isHoursValid,
                     supportingText = if (standardHoursPerWeek.isNotEmpty() && !isHoursValid) {
-                        { Text("Please enter a valid number") }
+                        { Text(stringResource(R.string.invalid_number)) }
                     } else null,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -194,7 +196,7 @@ fun AddEditChildScreen(
                 Divider(modifier = Modifier.padding(vertical = 8.dp))
                 
                 Text(
-                    text = "Parent/Guardian Information",
+                    text = stringResource(R.string.parent_info_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -203,8 +205,8 @@ fun AddEditChildScreen(
                 OutlinedTextField(
                     value = parentName,
                     onValueChange = { parentName = it },
-                    label = { Text("Parent/Guardian Name") },
-                    placeholder = { Text("Enter parent's name") },
+                    label = { Text(stringResource(R.string.parent_name)) },
+                    placeholder = { Text(stringResource(R.string.parent_name_placeholder)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -213,8 +215,8 @@ fun AddEditChildScreen(
                 OutlinedTextField(
                     value = parentContact,
                     onValueChange = { parentContact = it },
-                    label = { Text("Contact Information") },
-                    placeholder = { Text("Phone or email") },
+                    label = { Text(stringResource(R.string.contact_info)) },
+                    placeholder = { Text(stringResource(R.string.contact_info_placeholder)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.fillMaxWidth()
@@ -226,8 +228,8 @@ fun AddEditChildScreen(
                 OutlinedTextField(
                     value = notes,
                     onValueChange = { notes = it },
-                    label = { Text("Notes") },
-                    placeholder = { Text("Any additional notes...") },
+                    label = { Text(stringResource(R.string.notes)) },
+                    placeholder = { Text(stringResource(R.string.notes_placeholder)) },
                     minLines = 3,
                     maxLines = 5,
                     modifier = Modifier.fillMaxWidth()

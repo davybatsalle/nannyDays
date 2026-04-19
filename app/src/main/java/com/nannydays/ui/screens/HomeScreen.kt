@@ -11,8 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.nannydays.ui.components.EmptyState
+import com.nannydays.R
 import com.nannydays.ui.components.SectionHeader
 import com.nannydays.ui.viewmodel.ChildViewModel
 import com.nannydays.ui.viewmodel.CheckInResult
@@ -41,20 +42,22 @@ fun HomeScreen(
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     
+    val context = androidx.compose.ui.platform.LocalContext.current
+    
     LaunchedEffect(checkInResult) {
         when (val result = checkInResult) {
             is CheckInResult.Success -> {
                 snackbarMessage = if (result.isCheckIn) {
-                    "${result.childName} checked in successfully"
+                    context.getString(R.string.checked_in_success, result.childName)
                 } else {
-                    "${result.childName} checked out successfully"
+                    context.getString(R.string.checked_out_success, result.childName)
                 }
             }
             is CheckInResult.AlreadyCheckedIn -> {
-                snackbarMessage = "${result.childName} is already checked in"
+                snackbarMessage = context.getString(R.string.already_checked_in, result.childName)
             }
             is CheckInResult.Error -> {
-                snackbarMessage = "Error: ${result.message}"
+                snackbarMessage = context.getString(R.string.error_message, result.message)
             }
             else -> {}
         }
@@ -70,7 +73,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("NannyDays") },
+                title = { Text(stringResource(R.string.app_name)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -83,7 +86,7 @@ fun HomeScreen(
                 onClick = onNavigateToQrScanner,
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.QrCodeScanner, contentDescription = "Scan QR Code")
+                Icon(Icons.Default.QrCodeScanner, contentDescription = stringResource(R.string.scan_qr_code))
             }
         }
     ) { padding ->
@@ -106,7 +109,7 @@ fun HomeScreen(
             // Active Sessions Section
             item {
                 SectionHeader(
-                    title = "Active Sessions (${activeSessionsWithChildren.size})",
+                    title = stringResource(R.string.active_sessions_count, activeSessionsWithChildren.size),
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
@@ -119,7 +122,7 @@ fun HomeScreen(
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Text(
-                            text = "No active sessions",
+                            text = stringResource(R.string.no_active_sessions),
                             modifier = Modifier.padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -139,7 +142,7 @@ fun HomeScreen(
             // Children Section (Quick check-in)
             item {
                 SectionHeader(
-                    title = "Children (${children.size})",
+                    title = stringResource(R.string.children_count, children.size),
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
@@ -163,7 +166,7 @@ fun HomeScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Add your first child",
+                                text = stringResource(R.string.add_first_child),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -200,22 +203,22 @@ private fun QuickActionsSection(
     ) {
         QuickActionCard(
             icon = Icons.Default.People,
-            label = "Children",
+            label = stringResource(R.string.nav_children),
             onClick = onNavigateToChildren
         )
         QuickActionCard(
             icon = Icons.Default.Schedule,
-            label = "Sessions",
+            label = stringResource(R.string.nav_sessions),
             onClick = onNavigateToSessions
         )
         QuickActionCard(
             icon = Icons.Default.Assessment,
-            label = "Reports",
+            label = stringResource(R.string.nav_reports),
             onClick = onNavigateToReports
         )
         QuickActionCard(
             icon = Icons.Default.QrCodeScanner,
-            label = "Scan",
+            label = stringResource(R.string.scan_short),
             onClick = onNavigateToQrScanner
         )
     }
@@ -287,17 +290,17 @@ private fun ActiveSessionCard(
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = sessionWithChild.child?.name ?: "Unknown",
+                    text = sessionWithChild.child?.name ?: stringResource(R.string.unknown),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Checked in: ${DateTimeUtils.formatTime(sessionWithChild.session.checkInTime)}",
+                    text = stringResource(R.string.checked_in_at, DateTimeUtils.formatTime(sessionWithChild.session.checkInTime)),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Duration: ${DateTimeUtils.formatMinutes(sessionWithChild.session.getDurationMinutes())}",
+                    text = stringResource(R.string.duration, DateTimeUtils.formatMinutes(sessionWithChild.session.getDurationMinutes())),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -308,7 +311,7 @@ private fun ActiveSessionCard(
                     containerColor = MaterialTheme.colorScheme.error
                 )
             ) {
-                Text("Check Out")
+                Text(stringResource(R.string.check_out))
             }
         }
     }
@@ -348,11 +351,11 @@ private fun ChildQuickCard(
             )
             if (isActive) {
                 OutlinedButton(onClick = onCheckOut) {
-                    Text("Out")
+                    Text(stringResource(R.string.check_out_short))
                 }
             } else {
                 FilledTonalButton(onClick = onCheckIn) {
-                    Text("In")
+                    Text(stringResource(R.string.check_in_short))
                 }
             }
         }
