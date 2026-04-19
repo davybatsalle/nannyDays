@@ -68,6 +68,9 @@
     <string name="print">Print</string>
     <string name="print_tip">Print the saved image from your gallery</string>
     <string name="qr_tip_long">Tip: Print this QR code and attach it to the child\'s bag or card for quick check-ins!</string>
+    <string name="export_children_qr_sheet">Print children QR sheet (A4 PDF)</string>
+    <string name="children_qr_sheet_doc_title">NannyDays — Children QR codes</string>
+    <string name="children_qr_sheet_doc_subtitle">Reference sheet for check-in when a parent forgets their printed QR code. Page size: A4.</string>
 
     <!-- Reports -->
     <string name="generate_report">Generate Report</string>

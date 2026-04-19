@@ -66,6 +66,9 @@
     <string name="print">Imprimer</string>
     <string name="print_tip">Imprimez l\'image enregistrée depuis votre galerie</string>
     <string name="qr_tip_long">Astuce : Imprimez ce code QR et attachez-le au sac ou à la carte de l\'enfant pour des pointages rapides !</string>
+    <string name="export_children_qr_sheet">Feuille QR enfants (PDF A4)</string>
+    <string name="children_qr_sheet_doc_title">NannyDays — Codes QR des enfants</string>
+    <string name="children_qr_sheet_doc_subtitle">Feuille de référence pour le pointage si un parent oublie son code QR imprimé. Format : A4.</string>
 
     <!-- Reports -->
     <string name="generate_report">Générer le rapport</string>

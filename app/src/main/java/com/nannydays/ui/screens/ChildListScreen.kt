@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
@@ -17,8 +18,10 @@ import com.nannydays.R
 import com.nannydays.data.model.Child
 import com.nannydays.ui.components.ConfirmationDialog
 import com.nannydays.ui.components.EmptyState
+import com.nannydays.ui.components.LoadingOverlay
 import com.nannydays.ui.components.NannyDaysTopBar
 import com.nannydays.ui.viewmodel.ChildViewModel
+import com.nannydays.ui.viewmodel.ExportResult
 import com.nannydays.util.DateTimeUtils
 
 /**
@@ -32,16 +35,52 @@ fun ChildListScreen(
     onNavigateToChildDetail: (String) -> Unit,
     onNavigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
     val children by viewModel.allChildren.collectAsState()
+    val isGeneratingQrSheet by viewModel.isGeneratingChildrenQrSheet.collectAsState()
+    val qrSheetExportResult by viewModel.childrenQrSheetExportResult.collectAsState(initial = null)
     var childToDelete by remember { mutableStateOf<Child?>(null) }
-    
+
+    LaunchedEffect(qrSheetExportResult) {
+        when (val result = qrSheetExportResult) {
+            is ExportResult.Success -> {
+                snackbarHostState.showSnackbar(
+                    message = context.getString(R.string.export_saved, result.format, result.filePath),
+                    actionLabel = "OK",
+                    duration = SnackbarDuration.Long
+                )
+            }
+            is ExportResult.Error -> {
+                snackbarHostState.showSnackbar(
+                    context.getString(R.string.error_message, result.message)
+                )
+            }
+            null -> {}
+        }
+    }
+
     Scaffold(
         topBar = {
             NannyDaysTopBar(
                 title = stringResource(R.string.nav_children),
-                onNavigateBack = onNavigateBack
+                onNavigateBack = onNavigateBack,
+                actions = {
+                    if (children.isNotEmpty()) {
+                        IconButton(
+                            onClick = { viewModel.exportChildrenQrSheetPdf(context) },
+                            enabled = !isGeneratingQrSheet
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Print,
+                                contentDescription = stringResource(R.string.export_children_qr_sheet)
+                            )
+                        }
+                    }
+                }
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onNavigateToAddChild,
@@ -57,19 +96,22 @@ fun ChildListScreen(
                 modifier = Modifier.padding(padding)
             )
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                items(children, key = { it.id }) { child ->
-                    ChildListItem(
-                        child = child,
-                        onClick = { onNavigateToChildDetail(child.id) },
-                        onDelete = { childToDelete = child }
-                    )
+            Box(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(children, key = { it.id }) { child ->
+                        ChildListItem(
+                            child = child,
+                            onClick = { onNavigateToChildDetail(child.id) },
+                            onDelete = { childToDelete = child }
+                        )
+                    }
                 }
+                LoadingOverlay(isGeneratingQrSheet)
             }
         }
         
