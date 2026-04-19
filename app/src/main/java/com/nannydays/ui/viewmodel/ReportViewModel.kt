@@ -54,6 +54,13 @@ class ReportViewModel(
     private val _exportResult = MutableSharedFlow<ExportResult>()
     val exportResult: SharedFlow<ExportResult> = _exportResult.asSharedFlow()
 
+    private val _taxOfficeFormat = MutableStateFlow(false)
+    val taxOfficeFormat: StateFlow<Boolean> = _taxOfficeFormat.asStateFlow()
+
+    fun setTaxOfficeFormat(enabled: Boolean) {
+        _taxOfficeFormat.value = enabled
+    }
+
     fun selectChild(child: Child?) {
         _selectedChild.value = child
     }
@@ -80,12 +87,16 @@ class ReportViewModel(
                     .sumOf { it.getDurationHours().toDouble() }
                     .toFloat()
 
+                val (taxDaysOver, taxHoursPartial) = computeTaxOfficeDayStats(sessions)
+
                 _report.value = ChildReport(
                     child = child,
                     sessions = sessions,
                     totalHours = totalHours,
                     startDate = _startDate.value,
-                    endDate = _endDate.value
+                    endDate = _endDate.value,
+                    taxDaysOverThreshold = taxDaysOver,
+                    taxHoursOnDaysBelowThreshold = taxHoursPartial
                 )
             } catch (e: Exception) {
                 _exportResult.emit(ExportResult.Error(e.message ?: "Failed to generate report"))
@@ -114,7 +125,18 @@ class ReportViewModel(
                     writer.append("NannyDays Care Report\n")
                     writer.append("Child Name,${currentReport.child.name}\n")
                     writer.append("Period,${DateTimeUtils.formatDate(_startDate.value)} - ${DateTimeUtils.formatDate(_endDate.value)}\n")
-                    writer.append("Total Hours,${String.format("%.2f", currentReport.totalHours)}\n")
+                    if (_taxOfficeFormat.value) {
+                        writer.append(
+                            "Care days (>= ${ChildReport.TAX_DAY_THRESHOLD_HOURS.toInt()} h),${currentReport.taxDaysOverThreshold}\n"
+                        )
+                        writer.append(
+                            "Hours on days (< ${ChildReport.TAX_DAY_THRESHOLD_HOURS.toInt()} h),${
+                                String.format("%.2f", currentReport.taxHoursOnDaysBelowThreshold)
+                            }\n"
+                        )
+                    } else {
+                        writer.append("Total Hours,${String.format("%.2f", currentReport.totalHours)}\n")
+                    }
                     writer.append("\n")
                     
                     // Session details header
@@ -176,9 +198,20 @@ class ReportViewModel(
                 document.add(com.itextpdf.layout.element.Paragraph(
                     "Period: ${DateTimeUtils.formatDate(_startDate.value)} - ${DateTimeUtils.formatDate(_endDate.value)}"
                 ))
-                document.add(com.itextpdf.layout.element.Paragraph(
-                    "Total Hours: ${String.format("%.2f", currentReport.totalHours)}"
-                ).setBold())
+                if (_taxOfficeFormat.value) {
+                    document.add(com.itextpdf.layout.element.Paragraph(
+                        "Care days (>= ${ChildReport.TAX_DAY_THRESHOLD_HOURS.toInt()} h): ${currentReport.taxDaysOverThreshold}"
+                    ).setBold())
+                    document.add(com.itextpdf.layout.element.Paragraph(
+                        "Hours on days (< ${ChildReport.TAX_DAY_THRESHOLD_HOURS.toInt()} h): ${
+                            String.format("%.2f", currentReport.taxHoursOnDaysBelowThreshold)
+                        }"
+                    ).setBold())
+                } else {
+                    document.add(com.itextpdf.layout.element.Paragraph(
+                        "Total Hours: ${String.format("%.2f", currentReport.totalHours)}"
+                    ).setBold())
+                }
                 document.add(com.itextpdf.layout.element.Paragraph("\n"))
                 
                 // Sessions table
@@ -217,6 +250,27 @@ class ReportViewModel(
                 _isLoading.value = false
             }
         }
+    }
+
+    /**
+     * Per calendar day (local timezone, day of check-in): count days with completed hours &gt;= 8
+     * (including exactly 8 h), and sum hours on days with completed hours &lt; 8.
+     */
+    private fun computeTaxOfficeDayStats(sessions: List<CareSession>): Pair<Int, Float> {
+        val threshold = ChildReport.TAX_DAY_THRESHOLD_HOURS.toDouble()
+        val completedByDay = sessions
+            .filter { it.checkOutTime != null }
+            .groupBy { DateTimeUtils.getStartOfDay(it.checkInTime) }
+        var daysOver = 0
+        var hoursOnPartialDays = 0.0
+        for ((_, daySessions) in completedByDay) {
+            val dayHours = daySessions.sumOf { it.getDurationHours().toDouble() }
+            when {
+                dayHours >= threshold -> daysOver++
+                dayHours < threshold -> hoursOnPartialDays += dayHours
+            }
+        }
+        return Pair(daysOver, hoursOnPartialDays.toFloat())
     }
 
     /**

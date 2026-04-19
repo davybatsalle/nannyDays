@@ -83,6 +83,10 @@
     <string name="last_month">Last Month</string>
     <string name="total_hours">Total Hours</string>
     <string name="total_sessions">Total Sessions</string>
+    <string name="report_tax_office_format">Tax office format</string>
+    <string name="report_tax_days_over_8">Care days (8 h or more)</string>
+    <string name="report_tax_hours_partial_days">Hours on days under 8 h</string>
+    <string name="report_tax_hours_value">%1$.2f h</string>
 
     <string name="already_checked_in_scan">%1$s is already checked in. Scanning again will check out.</string>
     <string name="child_not_found">Child not found. Please check the QR code.</string>

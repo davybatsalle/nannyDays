@@ -81,6 +81,10 @@
     <string name="last_month">Le mois dernier</string>
     <string name="total_hours">Total des heures</string>
     <string name="total_sessions">Total des sessions</string>
+    <string name="report_tax_office_format">Format Impôts</string>
+    <string name="report_tax_days_over_8">Jours d\'accueil (8 h ou plus)</string>
+    <string name="report_tax_hours_partial_days">Heures (jours de moins de 8 h)</string>
+    <string name="report_tax_hours_value">%1$.2f h</string>
 
     <string name="already_checked_in_scan">%1$s est déjà arrivé. Scannez à nouveau pour enregistrer le départ.</string>
     <string name="child_not_found">Enfant non trouvé. Veuillez vérifier le code QR.</string>

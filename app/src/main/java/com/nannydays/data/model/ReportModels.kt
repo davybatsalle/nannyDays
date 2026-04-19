@@ -18,8 +18,16 @@ data class ChildReport(
     val sessions: List<CareSession>,
     val totalHours: Float,
     val startDate: Long,
-    val endDate: Long
-)
+    val endDate: Long,
+    /** Days in range whose total completed hours are at least [TAX_DAY_THRESHOLD_HOURS] (includes exactly 8 h). */
+    val taxDaysOverThreshold: Int = 0,
+    /** Sum of completed hours on days whose daily total is strictly less than [TAX_DAY_THRESHOLD_HOURS]. */
+    val taxHoursOnDaysBelowThreshold: Float = 0f
+) {
+    companion object {
+        const val TAX_DAY_THRESHOLD_HOURS = 8f
+    }
+}
 
 /**
  * Data class for daily summary.

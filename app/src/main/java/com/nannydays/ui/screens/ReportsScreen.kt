@@ -47,6 +47,7 @@ fun ReportsScreen(
     val report by viewModel.report.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val exportResult by viewModel.exportResult.collectAsState(initial = null)
+    val taxOfficeFormat by viewModel.taxOfficeFormat.collectAsState()
     
     var showChildPicker by remember { mutableStateOf(false) }
     
@@ -268,6 +269,23 @@ fun ReportsScreen(
                     }
                 }
                 
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.report_tax_office_format),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Switch(
+                            checked = taxOfficeFormat,
+                            onCheckedChange = { viewModel.setTaxOfficeFormat(it) }
+                        )
+                    }
+                }
+                
                 // Generate button
                 item {
                     Button(
@@ -295,7 +313,10 @@ fun ReportsScreen(
                     }
                     
                     item {
-                        ReportSummaryCard(report = currentReport)
+                        ReportSummaryCard(
+                            report = currentReport,
+                            taxOfficeFormat = taxOfficeFormat
+                        )
                     }
                     
                     // Session list
@@ -427,7 +448,7 @@ fun ReportsScreen(
 }
 
 @Composable
-private fun ReportSummaryCard(report: ChildReport) {
+private fun ReportSummaryCard(report: ChildReport, taxOfficeFormat: Boolean) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -454,26 +475,45 @@ private fun ReportSummaryCard(report: ChildReport) {
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                StatItem(
-                    label = stringResource(R.string.total_hours),
-                    value = stringResource(R.string.hours_stat, report.totalHours)
-                )
-                StatItem(
-                    label = stringResource(R.string.nav_sessions),
-                    value = report.sessions.size.toString()
-                )
-                StatItem(
-                    label = stringResource(R.string.avg_session),
-                    value = if (report.sessions.isNotEmpty()) {
-                        stringResource(R.string.hours_stat_label, report.totalHours / report.sessions.size)
-                    } else {
-                        "0h"
-                    }
-                )
+            if (taxOfficeFormat) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    StatItem(
+                        label = stringResource(R.string.report_tax_days_over_8),
+                        value = report.taxDaysOverThreshold.toString()
+                    )
+                    StatItem(
+                        label = stringResource(R.string.report_tax_hours_partial_days),
+                        value = stringResource(
+                            R.string.report_tax_hours_value,
+                            report.taxHoursOnDaysBelowThreshold
+                        )
+                    )
+                }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    StatItem(
+                        label = stringResource(R.string.total_hours),
+                        value = stringResource(R.string.hours_stat, report.totalHours)
+                    )
+                    StatItem(
+                        label = stringResource(R.string.nav_sessions),
+                        value = report.sessions.size.toString()
+                    )
+                    StatItem(
+                        label = stringResource(R.string.avg_session),
+                        value = if (report.sessions.isNotEmpty()) {
+                            stringResource(R.string.hours_stat_label, report.totalHours / report.sessions.size)
+                        } else {
+                            "0h"
+                        }
+                    )
+                }
             }
         }
     }
